@@ -2,10 +2,10 @@
 
 欢迎来到ANA入社考核环节，我们一共为大家准备了四个任务，时间安排和分值分配列举如下。安排这些任务的目的不是为了难，而是为了教学。我们非常欢迎学习能力强的小白，但我们不欢迎不愿意学习新知识的任何人。其中，申请者必须在Task 1中获得至少9分并且Task 1没有逾期，才可能具有入社资格。但是，本着以教学为主要原则，未完成Task 1目标的申请人仍然有资格参加后续的培训和任务，但无法加入研发部。但是不用担心，每一个Task都有详细的说明文档，我们不会默认被考核者具有某些先修知识。In other words, we are following one of the security principles: **Use fail-safe default**.
 
-- <u>Oct. 7th 00:00 - Oct. 13th 23:59</u> <b>Task 1 c-basic (10 pts): </b>在这个任务中，你将熟悉C语言基本语法。
-- <u>Oct. 14th 00:00 - Oct. 20th 23:59</u> <b>Task 2 upgrade-service (20 pts): </b>在这个任务中，你将熟悉C++ Standard Library（STL）的使用，并利用STL设计一个算法解决相关问题。
-- <u>Oct. 21st 00:00 - Oct. 27th 23:59</u> <b>Task 3 http (30 pts): </b>在这个任务中，你将熟悉各种C语言系统调用和http服务器的构成，这些POSIX标准下的系统调用在其他语言中仍然非常有用，因为它们是基于C的。
-- <u>Oct. 28th 00:00 - Nov. 3rd 23:59</u> <b>Task 4 An End-to-End Encrypted File Sharing System (40 pts): </b>在这个任务中，你将熟悉Go基本语法，并使用Go开发一些接口。除此之外，我们还会介绍一些密码学相关知识，你可以选择使用或不使用这些知识设计你的接口。
+- <u>Sep. 22nd 00:00 - Sep. 28th 23:59</u> <b>Task 1 c-basic (10 pts): </b>在这个任务中，你将熟悉C语言基本语法。
+- <u>Oct. 8th 00:00 - Oct. 14th 23:59</u> <b>Task 2 upgrade-service (20 pts): </b>在这个任务中，你将熟悉C++ Standard Library（STL）的使用，并利用STL设计一个算法解决相关问题。
+- <u>Oct. 15st 00:00 - Oct. 21st 23:59</u> <b>Task 3 http (30 pts): </b>在这个任务中，你将熟悉各种C语言系统调用和http服务器的构成，这些POSIX标准下的系统调用在其他语言中仍然非常有用，因为它们是基于C的。
+- <u>Oct. 22nd 00:00 - Oct. 28th 23:59</u> <b>Task 4 An End-to-End Encrypted File Sharing System (40 pts): </b>在这个任务中，你将熟悉Go基本语法，并使用Go开发一些接口。除此之外，我们还会介绍一些密码学相关知识，你可以选择使用或不使用这些知识设计你的接口。
 
 ## 招新政策
 
@@ -40,7 +40,7 @@
 
 ## Setup environment
 
-首先让我们来进行环境配置，社团提供教学机器，所有环境都已经配置好，你**可以**在教学机器上完成所有考核项目。你也**可以**自己配置环境并在自己的PC上完成所有考核项目。
+首先让我们来进行环境配置，社团提供教学机器，所有环境都已经配置好，你**可以**在教学机器上完成所有考核项目。你也**可以**自己配置环境并在自己的PC上完成所有考核项目。如果你需要使用社团提供的教学机器，请私信联系考核负责人。
 
 如果你选择在自己的PC上配置环境并且碰到了无法解决的问题，我们的社员**有权**拒绝回答此类问题，请使用教学机器。
 
@@ -118,6 +118,51 @@ ssh -T git@github.com
 Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.
 ```
 
+如果你使用了代理，你可能需要配置一下 ssh. 这是我们给你找的一个解决方案。[ssh-in-git-behind-proxy-on-windows](https://stackoverflow.com/questions/5103083/ssh-in-git-behind-proxy-on-windows-7). 当然，你也可以问大语言模型。
+
+如果你打不开这个网页，我们也帮你把内容复制下来了
+
+> Setting http.proxy will not work for ssh. You need to proxy your ssh connection. See this description. To summarize:
+\
+> Start `git-cmd.bat` and create `~/.ssh/config` (`notepad %home%\.ssh\config`.)
+
+```
+ProxyCommand /bin/connect.exe -H proxy.server.name:3128 %h %p
+
+Host github.com
+  User git
+  Port 22
+  Hostname github.com
+  IdentityFile "C:\users\username\.ssh\id_rsa"
+  TCPKeepAlive yes
+  IdentitiesOnly yes
+
+Host ssh.github.com
+  User git
+  Port 443
+  Hostname ssh.github.com
+  IdentityFile "C:\users\username\.ssh\id_rsa"
+  TCPKeepAlive yes
+  IdentitiesOnly yes
+```
+
+>(set the correct proxy hostname:port, and the path to id_rsa. When you use git-bash, use slashes in the path to id_rsa)
+\
+(My version of msysgit includes `connect.exe`, so I do not need to download and compile connect.c). A precompiled exe is also available here.
+\
+Now `ssh github.com` should work
+\
+Note that if you want to connect via a socks5 proxy, then change `-H` to `-S`.
+
+```
+ProxyCommand connect -S proxy.server.name:1080 %h %p
+```
+
+>If you use a Linux file system, the file permission of `~/.ssh/config` must be 600, but on a standard NTFS windows partition, these kind of permissions do not exist.
+\
+If your proxy requires NTLM authentication, you can use cntlm, see also this answer.
+
+
 **Git和Github**
 
 Git是一个版本控制工具，Github是Git的远程仓库之一，其它类似的远程仓库还有Gitlab，Gitea，Gitee等。
@@ -164,7 +209,7 @@ vscode的拓展插件非常丰富，我们可以使用**Remote - SSH**来连接�
 
 ## How to ask a question
 
-请使用Github的**Issues**功能，你可以在我们公开的两个仓库[setup](https://github.com/ANA-Training-2024/setup)和[student0](https://github.com/ANA-Training-2024/student0)上提交Issues，我们的社员会不定时去解决你的问题。但请注意，提问请遵守[诚信政策](#Integrity)。你也可以在你自己的student仓库内提出私人Issues（其他人不可见），我们同样会解答你的问题。
+请使用Github的**Issues**功能，你可以在我们公开的两个仓库[setup](https://github.com/ANA-Training-2025/setup)和[student0](https://github.com/ANA-Training-2025/student0)上提交Issues，我们的社员会不定时去解决你的问题。但请注意，提问请遵守[诚信政策](#Integrity)。你也可以在你自己的student仓库内提出私人Issues（其他人不可见），我们同样会解答你的问题。
 
 请不要在qq群提出技术方面的问题，qq群仅用于交流考核政策(policy)方面的问题，或者闲聊。为什么？因为我们不希望一个问题被其他人的消息掩盖掉，而且我们希望看到一个问题将问题本身描述得非常详细，如果你仅仅是询问：怎么安装vscode？诸如此类的问题，我们**有权**拒绝回答。相对地，“我的代码编译不通过，编译器提示了这个错误（后面附一张图片）”这种问题，我们很乐意为你解答。
 
